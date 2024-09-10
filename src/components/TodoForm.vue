@@ -1,8 +1,12 @@
 <template>
-  <form @submit.prevent="addTodo">
-    <input v-model="newTodo" :placeholder="parentId ? 'Ajouter une sous-tâche' : 'Ajouter une tâche'" />
-    <button type="submit">{{ parentId ? 'Ajouter sous-tâche' : 'Ajouter tâche' }}</button>
-  </form>
+  <v-form @submit.prevent="addTodo" class="d-flex">
+    <v-text-field
+        v-model="newTodo"
+        :placeholder="parentId ? 'Ajouter une sous-tâche' : 'Ajouter une tâche'"
+        type="text"
+    ></v-text-field>
+    <v-btn type="submit">Ajouter</v-btn>
+  </v-form>
 </template>
 
 <script lang="ts">

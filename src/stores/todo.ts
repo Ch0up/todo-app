@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
-interface Todo {
+export interface Todo {
   id: number;
   name: string;
   completed: boolean;
@@ -12,6 +12,25 @@ interface Todo {
 
 export const useTodoStore = defineStore('todo', () => {
   const todos = ref<Todo[]>([]);
+
+  const loadTodos = () => {
+    const storedTodos = localStorage.getItem('todos');
+    if (storedTodos) {
+      todos.value = JSON.parse(storedTodos).map((todo: Todo) => ({
+        ...todo,
+        createdAt: new Date(todo.createdAt),
+        completedAt: todo.completedAt ? new Date(todo.completedAt) : undefined,
+        subTasks: todo.subTasks || [],
+      }));
+    }
+  };
+
+  const saveTodos = () => {
+    localStorage.setItem('todos', JSON.stringify(todos.value));
+  };
+
+  // watch task changes and save them
+  watch(todos, saveTodos, { deep: true });
 
   const addTodo = (name: string, parentId?: number) => {
     const newTodo: Todo = {
@@ -79,11 +98,15 @@ export const useTodoStore = defineStore('todo', () => {
     }
   };
 
+  // Load tasks during store initialization
+  loadTodos();
+
   return {
     todos,
     addTodo,
     toggleTodo,
     removeTodo,
     editTodo,
+    saveTodos,
   };
 });
