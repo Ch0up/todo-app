@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
+import { defineStore } from "pinia";
+import { ref, watch } from "vue";
 
 export interface Todo {
   id: number;
@@ -10,11 +10,11 @@ export interface Todo {
   subTasks?: Todo[];
 }
 
-export const useTodoStore = defineStore('todo', () => {
+export const useTodoStore = defineStore("todo", () => {
   const todos = ref<Todo[]>([]);
 
   const loadTodos = () => {
-    const storedTodos = localStorage.getItem('todos');
+    const storedTodos = localStorage.getItem("todos");
     if (storedTodos) {
       todos.value = JSON.parse(storedTodos).map((todo: Todo) => ({
         ...todo,
@@ -26,7 +26,7 @@ export const useTodoStore = defineStore('todo', () => {
   };
 
   const saveTodos = () => {
-    localStorage.setItem('todos', JSON.stringify(todos.value));
+    localStorage.setItem("todos", JSON.stringify(todos.value));
   };
 
   // watch task changes and save them
@@ -51,7 +51,10 @@ export const useTodoStore = defineStore('todo', () => {
     }
   };
 
-  const findTodoById = (id: number, todoList = todos.value): Todo | undefined => {
+  const findTodoById = (
+    id: number,
+    todoList = todos.value
+  ): Todo | undefined => {
     for (const todo of todoList) {
       if (todo.id === id) return todo;
       const foundInSubTasks = findTodoById(id, todo.subTasks || []);
@@ -60,30 +63,63 @@ export const useTodoStore = defineStore('todo', () => {
     return undefined;
   };
 
+  const findParentTodoById = (
+    id: number,
+    todoList = todos.value
+  ): Todo | undefined => {
+    for (const todo of todoList) {
+      if (todo.subTasks?.some((subTask) => subTask.id === id)) {
+        return todo;
+      }
+      const foundInSubTasks = findParentTodoById(id, todo.subTasks || []);
+      if (foundInSubTasks) return foundInSubTasks;
+    }
+    return undefined;
+  };
+
   const toggleTodo = (id: number) => {
+    console.log("id =>>", id)
     const todo = findTodoById(id);
     if (todo) {
-      if (todo.subTasks?.length && !todo.subTasks.every(subTask => subTask.completed)) {
-        alert("Vous ne pouvez pas compléter cette tâche tant que toutes les sous-tâches ne sont pas complétées.");
+      if (
+        todo.subTasks?.length &&
+        !todo.subTasks.every((subTask) => subTask.completed)
+      ) {
+        alert(
+          "Vous ne pouvez pas compléter cette tâche tant que toutes les sous-tâches ne sont pas complétées."
+        );
         return;
       }
+
+      console.log("todo =>>", todo.completed)
+
       todo.completed = !todo.completed;
       todo.completedAt = todo.completed ? new Date() : undefined;
+
       if (todo.completed && todo.subTasks?.length) {
-        todo.subTasks.forEach(subTask => {
+        todo.subTasks.forEach((subTask) => {
           subTask.completed = true;
           subTask.completedAt = new Date();
         });
+      }
+
+      const parentTodo = findParentTodoById(id);
+      if (
+        parentTodo &&
+        parentTodo.subTasks?.every((subTask) => subTask.completed)
+      ) {
+        parentTodo.completed = true;
+        parentTodo.completedAt = new Date();
       }
     }
   };
 
   const removeTodo = (id: number, todoList = todos.value) => {
-    const index = todoList.findIndex(todo => todo.id === id);
+    const index = todoList.findIndex((todo) => todo.id === id);
     if (index !== -1) {
       todoList.splice(index, 1);
     } else {
-      todoList.forEach(todo => {
+      todoList.forEach((todo) => {
         if (todo.subTasks) {
           removeTodo(id, todo.subTasks);
         }
