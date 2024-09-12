@@ -1,11 +1,10 @@
 <template>
-  <div></div>
   <h1>My to-do list</h1>
   <v-divider class="my-5"></v-divider>
 
-  <div class="d-flex justify-end pr-4">
+  <template class="d-flex justify-end pr-5">
     <TodoDownloadActions />
-  </div>
+  </template>
   <TodoForm />
   <TodoList />
 </template>

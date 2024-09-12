@@ -7,23 +7,36 @@
     </template>
 
     <div class="d-flex">
-      <v-btn @click="startEdit" color="primary" class="mx-2"
+      <v-btn @click="startEdit" color="primary" class="mx-2">
+        <v-tooltip activator="parent" location="bottom">Edit</v-tooltip
         ><v-icon>mdi-pencil</v-icon></v-btn
       >
 
-      <v-btn @click="removeTodo(todo.id)" color="error"
+      <v-btn @click="removeTodo(todo.id)" color="error">
+        <v-tooltip activator="parent" location="bottom">Delete</v-tooltip
         ><v-icon>mdi-trash-can</v-icon></v-btn
       >
-      <v-btn @click="openSubtaskDialog(todo.name)" color="warning" class="mx-2"
-        ><v-icon>mdi-plus</v-icon></v-btn
+
+      <v-btn
+        @click="openSubtaskDialog(todo.name)"
+        color="warning"
+        class="mx-2"
+        :disabled="todo.completed"
+      >
+        <v-tooltip activator="parent" location="bottom">Add</v-tooltip>
+        <v-icon>mdi-plus</v-icon></v-btn
       >
     </div>
   </v-menu>
   <div v-else>
-    <v-btn @click="saveEdit" color="success" class="mr-2"
-      ><v-icon>mdi-checkbox-marked-circle</v-icon></v-btn
+    <v-btn @click="saveEdit" color="success" variant="elevated" class="mr-2">
+      <v-tooltip activator="parent" location="bottom">Save</v-tooltip>
+      <v-icon>mdi-checkbox-marked-circle</v-icon></v-btn
     >
-    <v-btn @click="cancelEdit" color="error"><v-icon>mdi-cancel</v-icon></v-btn>
+    <v-btn @click="cancelEdit" variant="elevated" color="error">
+      <v-tooltip activator="parent" location="bottom">Cancel</v-tooltip
+      ><v-icon>mdi-cancel</v-icon></v-btn
+    >
   </div>
 </template>
 

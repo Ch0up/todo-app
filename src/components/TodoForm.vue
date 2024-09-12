@@ -7,9 +7,10 @@
       <v-text-field
         v-model="newTodo"
         :placeholder="parentId ? 'Add subtask' : 'Add task'"
-        variant="solo"
+        variant="outlined"
         clearable
         @keyup.enter="addTodoAtPosition"
+        autofocus
       >
       </v-text-field>
       <div v-if="todos?.length">
@@ -19,7 +20,7 @@
           type="number"
           min="0"
           :max="parentId ? subtask?.length : todos?.length"
-          variant="solo"
+          variant="outlined"
         >
         </v-text-field>
       </div>

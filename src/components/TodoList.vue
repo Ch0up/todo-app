@@ -1,12 +1,9 @@
 <template>
-  <draggable
-    :list="todos"
-    @end="saveTodos"
-    animation="200"
-    class="draggable-content"
-  >
-    <TodoItem v-for="todo in todos" :key="todo.id" :todo="todo" />
-  </draggable>
+  <div v-if="todos && todos.length" class="draggable-content">
+    <draggable :list="todos" @end="saveTodos" animation="200">
+      <TodoItem v-for="todo in todos" :key="todo.id" :todo="todo" />
+    </draggable>
+  </div>
 </template>
 
 <script lang="ts">

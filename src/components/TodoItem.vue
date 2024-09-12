@@ -1,46 +1,59 @@
 <template>
-  <li :style="{ paddingLeft: `${depth * 20}px` }">
-    <div class="d-flex justify-space-around ml-12 align-center">
-      <div class="d-flex w-66">
-        <input
-          type="checkbox"
-          :checked="!!todo.completed"
-          :disabled="isCheckboxDisabled"
-          @change="toggleTodo(todo.id)"
-          class="mr-4"
-          :title="
-            isCheckboxDisabled ? 'You need to complete subtask before' : ''
-          "
-        />
-
-        <v-text-field
-          ref="editableNameInput"
-          :disabled="!isEditing"
-          v-model="editableName"
-          autofocus
-          variant="solo"
-          :class="{ completed: todo.completed }"
-          @keyup.enter="saveEdit"
-          @keyup.esc="cancelEdit"
-          clearable
-        />
-      </div>
-
-      <TodoCrudActions
-        :isEditing="isEditing"
-        :todo="todo"
-        @startEdit="startEdit"
-        @removeTodo="removeTodo"
-        @openSubtaskDialog="openSubtaskDialog"
-        @saveEdit="saveEdit"
-        @cancelEdit="cancelEdit"
-      />
-    </div>
-
-    <span>Created on : {{ formatedDate(todo.createdAt) }} </span>
-    <span v-if="todo.completedAt">
-      Completed at : {{ formatedDate(todo.completedAt) }}
-    </span>
+  <div :style="{ paddingLeft: `${depth * 20}px` }">
+    <v-hover>
+      <template v-slot:default="{ isHovering, props }">
+        <v-card
+          v-bind="props"
+          :style="isHovering ? 'background-color: rgb(230, 229, 229)' : ''"
+          class="ma-4 pa-6 d-flex justify-space-between align-center"
+        >
+          <v-card-title class="d-flex">
+            <input
+              type="checkbox"
+              :checked="!!todo.completed"
+              :disabled="isCheckboxDisabled"
+              @change="toggleTodo(todo.id)"
+              class="mr-4"
+              :title="
+                isCheckboxDisabled ? 'You need to complete subtask before' : ''
+              "
+            />
+            <div v-if="!isEditing" :class="{ completed: todo.completed }">
+              {{ editableName }}
+            </div>
+            <v-text-field
+              v-else
+              ref="editableNameInput"
+              v-model="editableName"
+              variant="outlined"
+              :class="{ completed: todo.completed }"
+              @keyup.enter="saveEdit"
+              @keyup.esc="cancelEdit"
+              clearable
+              autofocus
+              min-width="300"
+            />
+          </v-card-title>
+          <v-card-subtitle>
+            <div>Created : {{ formatedDate(todo.createdAt) }}</div>
+            <div v-if="todo.completedAt">
+              Completed : {{ formatedDate(todo.completedAt) }}
+            </div>
+          </v-card-subtitle>
+          <v-card-actions>
+            <TodoCrudActions
+              :isEditing="isEditing"
+              :todo="todo"
+              @startEdit="startEdit"
+              @removeTodo="removeTodo"
+              @openSubtaskDialog="openSubtaskDialog"
+              @saveEdit="saveEdit"
+              @cancelEdit="cancelEdit"
+            />
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-hover>
 
     <v-dialog v-model="isSubtaskDialogOpen" max-width="600">
       <template v-slot:default="{ isActive }">
@@ -59,6 +72,7 @@
             <v-btn
               class="ml-auto"
               text="Close"
+              variant="elevated"
               @click="isActive.value = false"
             ></v-btn>
           </template>
@@ -66,7 +80,7 @@
       </template>
     </v-dialog>
 
-    <ul v-if="todo.subTasks && todo.subTasks.length" class="draggable-content">
+    <div v-if="todo.subTasks && todo.subTasks.length" class="draggable-content">
       <draggable :list="todo.subTasks" @end="saveTodos" animation="200">
         <TodoItem
           v-for="subTask in todo.subTasks"
@@ -75,17 +89,12 @@
           :depth="depth + 2"
         />
       </draggable>
-    </ul>
-  </li>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  nextTick,
-  computed,
-} from "vue";
+import { defineComponent, ref, nextTick, computed } from "vue";
 import { useTodoStore } from "../stores/todos";
 import { VueDraggableNext } from "vue-draggable-next";
 import { Todo } from "../models/todo";
@@ -190,14 +199,11 @@ export default defineComponent({
 <style scoped>
 .completed {
   text-decoration: line-through;
-}
-
-li {
-  list-style-type: none;
+  color: grey;
 }
 
 input[type="checkbox"] {
-  width: 1.5em;
+  width: 1em;
 }
 
 input[type="checkbox"]:disabled:hover {

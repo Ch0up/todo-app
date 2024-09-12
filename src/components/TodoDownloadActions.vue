@@ -1,9 +1,18 @@
 <template>
   <div>
-    <v-btn @click="downloadTodos" color="primary"
+    <v-btn
+      @click="downloadTodos"
+      color="primary"
+      :disabled="todos && todos.length ? false : true"
+    >
+      <v-tooltip activator="parent" location="bottom"
+        >Download To-do list in json</v-tooltip
       ><v-icon>mdi-download</v-icon>Download</v-btn
     >
     <v-btn @click="triggerFileInput" class="ml-4">
+      <v-tooltip activator="parent" location="bottom"
+        >Upload to-do list in json</v-tooltip
+      >
       <v-icon>mdi-upload</v-icon>
       Upload
       <input
@@ -78,6 +87,7 @@ export default defineComponent({
       downloadTodos,
       uploadTodos,
       fileInput,
+      todos,
     };
   },
 });
