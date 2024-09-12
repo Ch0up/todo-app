@@ -49,7 +49,7 @@ export default defineComponent({
     "saveEdit",
     "cancelEdit",
   ],
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const startEdit = () => emit("startEdit");
     const removeTodo = (id: number) => emit("removeTodo", id);
     const openSubtaskDialog = (name: string) => emit("openSubtaskDialog", name);
