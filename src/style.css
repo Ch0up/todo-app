@@ -26,10 +26,9 @@ body {
 }
 
 .draggable-content:hover {
-  cursor: move
- }
+  cursor: move;
+}
 
- .v-input__details {
+.v-input__details {
   display: none !important;
- }
-
+}

@@ -2,14 +2,15 @@
   <li :style="{ paddingLeft: `${depth * 20}px` }">
     <div class="d-flex justify-space-around ml-12 align-center">
       <div class="d-flex w-66">
-   
         <input
           type="checkbox"
           :checked="!!todo.completed"
           :disabled="isCheckboxDisabled"
           @change="toggleTodo(todo.id)"
           class="mr-4"
-          :title="isCheckboxDisabled ? 'You need to complete subtask before' : ''"
+          :title="
+            isCheckboxDisabled ? 'You need to complete subtask before' : ''
+          "
         />
 
         <v-text-field
@@ -47,7 +48,11 @@
           <v-card-title>Add subtask to {{ todo.name }}</v-card-title>
           <v-divider></v-divider>
           <v-card-text>
-            <TodoForm :parentId="todo.id" :subtask="todo.subTasks" @subtask-added="closeSubtaskDialog"/>
+            <TodoForm
+              :parentId="todo.id"
+              :subtask="todo.subTasks"
+              @subtask-added="closeSubtaskDialog"
+            />
           </v-card-text>
 
           <template v-slot:actions>
@@ -75,7 +80,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, defineAsyncComponent, ref, nextTick, computed } from "vue";
+import {
+  defineComponent,
+  defineAsyncComponent,
+  ref,
+  nextTick,
+  computed,
+} from "vue";
 import { useTodoStore } from "../stores/todos";
 import { VueDraggableNext } from "vue-draggable-next";
 import { Todo } from "../models/todo";
@@ -102,8 +113,10 @@ export default defineComponent({
   },
   setup(props) {
     const isCheckboxDisabled = computed(() => {
-      return !!(props.todo.subTasks?.length && !areAllSubtasksCompleted(props.todo))
-    })
+      return !!(
+        props.todo.subTasks?.length && !areAllSubtasksCompleted(props.todo)
+      );
+    });
     const isSubtaskDialogOpen = ref(false);
     const editableNameInput = ref<HTMLInputElement | null>(null);
 
@@ -124,7 +137,7 @@ export default defineComponent({
       await nextTick();
       if (editableNameInput.value) editableNameInput.value.focus();
     };
-    
+
     const saveEdit = () => {
       if (editableName.value && editableName.value.trim()) {
         editTodo(props.todo.id, editableName.value);
@@ -140,7 +153,7 @@ export default defineComponent({
       editableName.value = props.todo.name;
     };
 
-    const selectedSubtaskName = ref('')
+    const selectedSubtaskName = ref("");
 
     const openSubtaskDialog = (name: string) => {
       selectedSubtaskName.value = name;

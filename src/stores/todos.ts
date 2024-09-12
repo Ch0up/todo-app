@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { Todo } from "../models/todo";
 
-
 export const useTodoStore = defineStore("todo", () => {
   const todos = ref<Todo[]>([]);
 
@@ -67,7 +66,7 @@ export const useTodoStore = defineStore("todo", () => {
 
   const findTodoById = (
     id: number,
-    todoList = todos.value
+    todoList = todos.value,
   ): Todo | undefined => {
     for (const todo of todoList) {
       if (todo.id === id) return todo;
@@ -79,7 +78,7 @@ export const useTodoStore = defineStore("todo", () => {
 
   const findParentTodoById = (
     id: number,
-    todoList = todos.value
+    todoList = todos.value,
   ): Todo | undefined => {
     for (const todo of todoList) {
       if (todo.subTasks?.some((subTask) => subTask.id === id)) {

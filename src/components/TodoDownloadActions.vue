@@ -1,14 +1,21 @@
 <template>
   <div>
-    <v-btn @click="downloadTodos" color="primary"><v-icon>mdi-download</v-icon>Download</v-btn>
+    <v-btn @click="downloadTodos" color="primary"
+      ><v-icon>mdi-download</v-icon>Download</v-btn
+    >
     <v-btn @click="triggerFileInput" class="ml-4">
       <v-icon>mdi-upload</v-icon>
       Upload
-      <input type="file" ref="fileInput" @change="uploadTodos" accept=".json" class="d-none" />
+      <input
+        type="file"
+        ref="fileInput"
+        @change="uploadTodos"
+        accept=".json"
+        class="d-none"
+      />
     </v-btn>
   </div>
 </template>
-
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
@@ -17,7 +24,6 @@ import { Todo } from "../models/todo";
 
 export default defineComponent({
   setup() {
-
     const fileInput = ref<HTMLInputElement | null>(null);
 
     const triggerFileInput = () => {
@@ -30,8 +36,10 @@ export default defineComponent({
     const { todos, saveTodos } = todoStore;
 
     const downloadTodos = () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(todos));
-      const downloadAnchorNode = document.createElement('a');
+      const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(todos));
+      const downloadAnchorNode = document.createElement("a");
       downloadAnchorNode.setAttribute("href", dataStr);
       downloadAnchorNode.setAttribute("download", "todos.json");
       document.body.appendChild(downloadAnchorNode);
@@ -52,7 +60,9 @@ export default defineComponent({
               todos.push({
                 ...todo,
                 createdAt: new Date(todo.createdAt),
-                completedAt: todo.completedAt ? new Date(todo.completedAt) : undefined,
+                completedAt: todo.completedAt
+                  ? new Date(todo.completedAt)
+                  : undefined,
                 subTasks: todo.subTasks || [],
               });
             });
@@ -63,12 +73,11 @@ export default defineComponent({
       }
     };
 
-
     return {
       triggerFileInput,
       downloadTodos,
       uploadTodos,
-      fileInput
+      fileInput,
     };
   },
 });

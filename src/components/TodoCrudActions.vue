@@ -1,5 +1,5 @@
 <template>
-  <v-menu v-if="!isEditing" location="end" >
+  <v-menu v-if="!isEditing" location="end">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props" class="mt-n2">
         <v-icon icon="mdi-dots-vertical"></v-icon>
@@ -14,7 +14,7 @@
       <v-btn @click="removeTodo(todo.id)" color="error"
         ><v-icon>mdi-trash-can</v-icon></v-btn
       >
-      <v-btn @click="openSubtaskDialog(todo.name)" color="warning"  class="mx-2"
+      <v-btn @click="openSubtaskDialog(todo.name)" color="warning" class="mx-2"
         ><v-icon>mdi-plus</v-icon></v-btn
       >
     </div>

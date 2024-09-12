@@ -1,14 +1,13 @@
 <template>
-  <div>
-  </div>
-      <h1>My to-do list</h1>
-      <v-divider class="my-5"></v-divider>
+  <div></div>
+  <h1>My to-do list</h1>
+  <v-divider class="my-5"></v-divider>
 
-      <div class="d-flex justify-end pr-4">
-        <TodoDownloadActions />
-      </div>
-      <TodoForm />
-      <TodoList />
+  <div class="d-flex justify-end pr-4">
+    <TodoDownloadActions />
+  </div>
+  <TodoForm />
+  <TodoList />
 </template>
 
 <script lang="ts">
