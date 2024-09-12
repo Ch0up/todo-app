@@ -13,9 +13,9 @@ npm (version 10.5.0 or higher)
 
 1. Follow these steps to install the project locally:
 
-2. Clone this GitHub repository to your machine: https://github.com/Ch0up/e-shop.git
+2. Clone this GitHub repository to your machine: https://github.com/Ch0up/todo-app.git
 
-3. Navigate to the project directory: cd/e-shop
+3. Navigate to the project directory: cd/todo-app
 
 4. Install the project dependencies by running the following command: npm install
 
