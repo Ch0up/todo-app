@@ -1,38 +1,41 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
+import { Todo } from "../models/todo";
 
-export interface Todo {
-  id: number;
-  name: string;
-  completed: boolean;
-  createdAt: Date;
-  completedAt?: Date;
-  subTasks?: Todo[];
-}
 
 export const useTodoStore = defineStore("todo", () => {
   const todos = ref<Todo[]>([]);
 
   const loadTodos = () => {
-    const storedTodos = localStorage.getItem("todos");
-    if (storedTodos) {
-      todos.value = JSON.parse(storedTodos).map((todo: Todo) => ({
-        ...todo,
-        createdAt: new Date(todo.createdAt),
-        completedAt: todo.completedAt ? new Date(todo.completedAt) : undefined,
-        subTasks: todo.subTasks || [],
-      }));
+    try {
+      const storedTodos = localStorage.getItem("todos");
+      if (storedTodos) {
+        todos.value = JSON.parse(storedTodos).map((todo: Todo) => ({
+          ...todo,
+          createdAt: new Date(todo.createdAt),
+          completedAt: todo.completedAt
+            ? new Date(todo.completedAt)
+            : undefined,
+          subTasks: todo.subTasks || [],
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to load todos from localStorage:", error);
     }
   };
 
   const saveTodos = () => {
-    localStorage.setItem("todos", JSON.stringify(todos.value));
+    try {
+      localStorage.setItem("todos", JSON.stringify(todos.value));
+    } catch (error) {
+      console.error("Failed to save todos to localStorage:", error);
+    }
   };
 
   // watch task changes and save them
   watch(todos, saveTodos, { deep: true });
 
-  const addTodo = (name: string, parentId?: number) => {
+  const addTodo = (name: string, parentId?: number, index?: number) => {
     const newTodo: Todo = {
       id: Date.now(),
       name,
@@ -40,14 +43,25 @@ export const useTodoStore = defineStore("todo", () => {
       createdAt: new Date(),
       subTasks: [],
     };
-
     if (parentId) {
       const parentTodo = findTodoById(parentId);
       if (parentTodo) {
-        parentTodo.subTasks?.push(newTodo);
+        if (
+          index !== undefined &&
+          index >= 0 &&
+          index < parentTodo.subTasks!.length
+        ) {
+          parentTodo.subTasks!.splice(index, 0, newTodo);
+        } else {
+          parentTodo.subTasks?.push(newTodo);
+        }
       }
     } else {
-      todos.value.push(newTodo);
+      if (index !== undefined && index >= 0 && index < todos.value.length) {
+        todos.value.splice(index, 0, newTodo);
+      } else {
+        todos.value.push(newTodo);
+      }
     }
   };
 
@@ -78,39 +92,34 @@ export const useTodoStore = defineStore("todo", () => {
   };
 
   const toggleTodo = (id: number) => {
-    console.log("id =>>", id)
     const todo = findTodoById(id);
     if (todo) {
-      if (
-        todo.subTasks?.length &&
-        !todo.subTasks.every((subTask) => subTask.completed)
-      ) {
-        alert(
-          "Vous ne pouvez pas compléter cette tâche tant que toutes les sous-tâches ne sont pas complétées."
-        );
-        return;
-      }
-
-      console.log("todo =>>", todo.completed)
-
       todo.completed = !todo.completed;
       todo.completedAt = todo.completed ? new Date() : undefined;
 
-      if (todo.completed && todo.subTasks?.length) {
+      if (todo.subTasks?.length) {
         todo.subTasks.forEach((subTask) => {
-          subTask.completed = true;
-          subTask.completedAt = new Date();
+          subTask.completed = todo.completed;
+          subTask.completedAt = todo.completed ? new Date() : undefined;
         });
       }
 
-      const parentTodo = findParentTodoById(id);
-      if (
-        parentTodo &&
-        parentTodo.subTasks?.every((subTask) => subTask.completed)
-      ) {
+      updateTodoParent(id);
+    }
+  };
+
+  // Update the state of the parent task recursively
+  const updateTodoParent = (id: number) => {
+    const parentTodo = findParentTodoById(id);
+    if (parentTodo) {
+      if (parentTodo.subTasks?.every((subTask) => subTask.completed)) {
         parentTodo.completed = true;
         parentTodo.completedAt = new Date();
+      } else {
+        parentTodo.completed = false;
+        parentTodo.completedAt = undefined;
       }
+      updateTodoParent(parentTodo.id);
     }
   };
 
@@ -129,7 +138,7 @@ export const useTodoStore = defineStore("todo", () => {
 
   const editTodo = (id: number, newName: string) => {
     const todo = findTodoById(id);
-    if (todo) {
+    if (todo && todo.name) {
       todo.name = newName;
     }
   };
