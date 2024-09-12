@@ -1,5 +1,5 @@
 <template>
-  <v-menu v-if="!isEditing" location="end">
+  <v-menu v-if="!isEditing" location="start">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props" class="mt-n2">
         <v-icon icon="mdi-dots-vertical"></v-icon>
