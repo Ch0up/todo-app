@@ -135,10 +135,14 @@ export const useTodoStore = defineStore("todo", () => {
     }
   };
 
-  const editTodo = (id: number, newName: string) => {
-    const todo = findTodoById(id);
-    if (todo && todo.name) {
-      todo.name = newName;
+  const editTodo = (id: number, newName: string): void => {
+    try {
+      const todo = findTodoById(id);
+      if (todo && todo.name) {
+        todo.name = newName;
+      }
+    } catch (error) {
+      console.error("Failed to edit todo:", error);
     }
   };
 

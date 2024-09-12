@@ -92,12 +92,9 @@ import { Todo } from "../models/todo";
 import TodoForm from "./TodoForm.vue";
 import TodoCrudActions from "./TodoCrudActions.vue";
 
-const TodoItem = (() => import("./TodoItem.vue")); // recurcive import
-
 export default defineComponent({
   components: {
     TodoForm,
-    TodoItem,
     TodoCrudActions,
     draggable: VueDraggableNext,
   },
