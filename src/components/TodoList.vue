@@ -6,9 +6,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useTodoStore } from "../stores/todo";
-import TodoItem from "./TodoItem.vue";
+import { useTodoStore } from "../stores/todos";
 import { VueDraggableNext } from "vue-draggable-next";
+import TodoItem from "./TodoItem.vue";
+
 
 export default defineComponent({
   components: {
@@ -26,7 +27,3 @@ export default defineComponent({
   },
 });
 </script>
-
-
-<style scoped>
-</style>

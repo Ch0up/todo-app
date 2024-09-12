@@ -1,0 +1,68 @@
+<template>
+  <v-menu v-if="!isEditing" location="end" >
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" class="mt-n2">
+        <v-icon icon="mdi-dots-vertical"></v-icon>
+      </v-btn>
+    </template>
+
+    <div class="d-flex">
+      <v-btn @click="startEdit" color="primary" class="mx-2"
+        ><v-icon>mdi-pencil</v-icon></v-btn
+      >
+
+      <v-btn @click="removeTodo(todo.id)" color="error"
+        ><v-icon>mdi-trash-can</v-icon></v-btn
+      >
+      <v-btn @click="openSubtaskDialog(todo.name)" color="warning"  class="mx-2"
+        ><v-icon>mdi-plus</v-icon></v-btn
+      >
+    </div>
+  </v-menu>
+  <div v-else>
+    <v-btn @click="saveEdit" color="success" class="mr-2"
+      ><v-icon>mdi-checkbox-marked-circle</v-icon></v-btn
+    >
+    <v-btn @click="cancelEdit" color="error"><v-icon>mdi-cancel</v-icon></v-btn>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import { Todo } from "../models/todo";
+
+export default defineComponent({
+  props: {
+    isEditing: {
+      type: Boolean,
+      required: true,
+    },
+    todo: {
+      type: Object as () => Todo,
+      required: true,
+    },
+  },
+  emits: [
+    "startEdit",
+    "removeTodo",
+    "openSubtaskDialog",
+    "saveEdit",
+    "cancelEdit",
+  ],
+  setup(props, { emit }) {
+    const startEdit = () => emit("startEdit");
+    const removeTodo = (id: number) => emit("removeTodo", id);
+    const openSubtaskDialog = (name: string) => emit("openSubtaskDialog", name);
+    const saveEdit = () => emit("saveEdit");
+    const cancelEdit = () => emit("cancelEdit");
+
+    return {
+      startEdit,
+      removeTodo,
+      openSubtaskDialog,
+      saveEdit,
+      cancelEdit,
+    };
+  },
+});
+</script>
