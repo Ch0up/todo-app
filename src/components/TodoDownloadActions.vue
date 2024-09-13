@@ -4,12 +4,13 @@
       @click="downloadTodos"
       color="primary"
       :disabled="todos && todos.length ? false : true"
+      class="text-capitalize"
     >
       <v-tooltip activator="parent" location="bottom"
         >Download To-do list in json</v-tooltip
       ><v-icon>mdi-download</v-icon>Download</v-btn
     >
-    <v-btn @click="triggerFileInput" class="ml-4">
+    <v-btn @click="triggerFileInput" class="ml-4 text-capitalize">
       <v-tooltip activator="parent" location="bottom"
         >Upload to-do list in json</v-tooltip
       >

@@ -5,9 +5,9 @@
         <v-card
           v-bind="props"
           :style="isHovering ? 'background-color: rgb(230, 229, 229)' : ''"
-          class="ma-4 pa-6 d-flex justify-space-between align-center"
+          class="ma-4 pa-6 d-md-flex justify-space-between align-center"
         >
-          <v-card-title class="d-flex">
+          <v-card-title class="d-flex justify-center">
             <input
               type="checkbox"
               :checked="!!todo.completed"
@@ -34,14 +34,14 @@
               min-width="300"
             />
           </v-card-title>
-          <div class="d-flex align-center">
+          <div class="d-md-flex align-center justify-center">
             <v-card-subtitle>
               <div>Created : {{ formatedDate(todo.createdAt) }}</div>
               <div v-if="todo.completedAt">
                 Completed : {{ formatedDate(todo.completedAt) }}
               </div>
             </v-card-subtitle>
-            <v-card-actions class="align-end">
+            <v-card-actions class="align-end justify-center">
               <TodoCrudActions
                 :isEditing="isEditing"
                 :todo="todo"
@@ -72,7 +72,7 @@
 
           <template v-slot:actions>
             <v-btn
-              class="ml-auto"
+              class="ml-auto text-capitalize"
               text="Close"
               variant="elevated"
               @click="isActive.value = false"
