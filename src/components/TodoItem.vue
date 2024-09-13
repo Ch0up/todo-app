@@ -34,23 +34,25 @@
               min-width="300"
             />
           </v-card-title>
-          <v-card-subtitle>
-            <div>Created : {{ formatedDate(todo.createdAt) }}</div>
-            <div v-if="todo.completedAt">
-              Completed : {{ formatedDate(todo.completedAt) }}
-            </div>
-          </v-card-subtitle>
-          <v-card-actions>
-            <TodoCrudActions
-              :isEditing="isEditing"
-              :todo="todo"
-              @startEdit="startEdit"
-              @removeTodo="removeTodo"
-              @openSubtaskDialog="openSubtaskDialog"
-              @saveEdit="saveEdit"
-              @cancelEdit="cancelEdit"
-            />
-          </v-card-actions>
+          <div class="d-flex align-center">
+            <v-card-subtitle>
+              <div>Created : {{ formatedDate(todo.createdAt) }}</div>
+              <div v-if="todo.completedAt">
+                Completed : {{ formatedDate(todo.completedAt) }}
+              </div>
+            </v-card-subtitle>
+            <v-card-actions class="align-end">
+              <TodoCrudActions
+                :isEditing="isEditing"
+                :todo="todo"
+                @startEdit="startEdit"
+                @removeTodo="removeTodo"
+                @openSubtaskDialog="openSubtaskDialog"
+                @saveEdit="saveEdit"
+                @cancelEdit="cancelEdit"
+              />
+            </v-card-actions>
+          </div>
         </v-card>
       </template>
     </v-hover>
